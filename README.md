@@ -1,13 +1,14 @@
-📚 StudySphere-AI
+#📚 StudySphere-AI
 Your AI-powered learning assistant for PDFs, quizzes, flashcards, and summaries.
-✨ Overview
+
+##✨ Overview
 
 StudySphere-AI is an AI-driven learning platform that transforms PDFs into an interactive study environment using Retrieval-Augmented Generation (RAG) and modern LLMs.
 
 Ask questions, generate summaries, build flashcards, create quizzes, and interact with your study material like never before.
 
-🚀 Features
-🔍 RAG-Based PDF Question Answering
+##🚀 Features
+###🔍 RAG-Based PDF Question Answering
 
 Extracts text from PDFs
 
@@ -19,7 +20,7 @@ Performs semantic search with FAISS
 
 Produces grounded, context-aware answers
 
-💬 Interactive Chat Mode
+###💬 Interactive Chat Mode
 
 Ask questions directly from your notes
 
@@ -27,7 +28,7 @@ AI responds using retrieved context
 
 Smooth typing/streaming effect
 
-📝 Exam Generator
+###📝 Exam Generator
 
 Auto-generate MCQs with correct answers
 
@@ -35,7 +36,7 @@ Create open-ended Q&A
 
 Highlight → Focused quiz generation
 
-📇 Flashcards Mode (Click-to-Flip)
+###📇 Flashcards Mode (Click-to-Flip)
 
 Automatically creates AI flashcards
 
@@ -43,7 +44,7 @@ Each card has a front/back flip animation
 
 Perfect for revising concepts quickly
 
-🧠 Summarizer
+###🧠 Summarizer
 
 Create bullet summaries
 
@@ -51,7 +52,7 @@ Generate detailed chapter summaries
 
 Adjustable word length
 
-💾 Persistent Vector Storage
+###💾 Persistent Vector Storage
 
 Saves FAISS index + chunks
 
@@ -63,7 +64,7 @@ No need to reprocess PDFs on every run
 <img width="487" height="215" alt="image" src="https://github.com/user-attachments/assets/e5d841c8-5830-44c8-ba2f-40c5f94cfb3c" />
 This prevents hallucinations and ensures responses come from your study material.
 
-🔒 Security
+##🔒 Security
 
 .env is ignored → API keys stay private
 
@@ -73,7 +74,7 @@ FAISS index and text chunks are stored locally
 
 Only the LLM prompt is sent to OpenRouter
 
-🚧 Future Improvements
+##🚧 Future Improvements
 
 📦 Export flashcards to Anki
 
@@ -90,7 +91,7 @@ Only the LLM prompt is sent to OpenRouter
 Pull requests, issues, and feature ideas are welcome.
 Let’s grow StudySphere-AI together.
 
-📜 License
+##📜 License
 
 Licensed under the MIT License.
 
