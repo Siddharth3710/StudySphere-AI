@@ -1,0 +1,35 @@
+# --- Secrets ---
+.env
+
+# --- Vector Index / User Data ---
+data/index.faiss
+data/chunks.json
+
+# --- PDF Files / Sensitive Docs ---
+*.pdf
+
+# --- Local Model Files ---
+*.gguf
+*.bin
+*.pth
+
+# --- Python Cache ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- Virtual Environments ---
+venv/
+.venv/
+env/
+
+# --- OS / Editor Files ---
+.DS_Store
+Thumbs.db
+
+# --- Streamlit Cache ---
+.streamlit/
+
+# --- Logs ---
+*.log
