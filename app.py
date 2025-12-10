@@ -29,7 +29,7 @@ from utils.exam import (
     generate_summary,
 )
 
-st.set_page_config(page_title="RAG PDF Chatbot", layout="wide")
+st.set_page_config(page_title="📚RAG PDF Chatbot", layout="wide")
 
 
 # -------------------------------------------------------------------
