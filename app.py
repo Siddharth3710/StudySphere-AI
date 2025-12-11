@@ -29,7 +29,7 @@ from utils.exam import (
     generate_summary,
 )
 
-st.set_page_config(page_title="📚RAG PDF Chatbot", layout="wide")
+st.set_page_config(page_title="RAG PDF Chatbot", layout="wide")
 
 
 # -------------------------------------------------------------------
@@ -108,6 +108,38 @@ def parse_qa(text):
     return questions
 
 
+def format_answer(text):
+    """Format answer text for better readability with proper line breaks"""
+    # Split by common delimiters
+    lines = text.split("\n")
+    formatted_lines = []
+
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+
+        # Handle numbered lists (1. 2. 3.)
+        if line and line[0].isdigit() and ". " in line[:4]:
+            formatted_lines.append(f"\n**{line}**")
+        # Handle bullet points (- or * or •)
+        elif line.startswith(("-", "*", "•")):
+            formatted_lines.append(f"\n{line}")
+        # Handle sentences ending with : (likely introducing a list)
+        elif line.endswith(":"):
+            formatted_lines.append(f"\n**{line}**")
+        else:
+            formatted_lines.append(line)
+
+    # Join with proper spacing
+    result = " ".join(formatted_lines)
+
+    # Ensure bullet points and numbered items are on new lines
+    result = result.replace(" \n", "\n")
+
+    return result
+
+
 # -------------------------------------------------------------------
 # SESSION STATE
 # -------------------------------------------------------------------
@@ -170,35 +202,106 @@ with tab1:
 
 
 # -------------------------------------------------------------------
-# TAB 2: LEARN MODE (STREAMING)
+# TAB 2: LEARN MODE (IMPROVED)
 # -------------------------------------------------------------------
 with tab2:
-    st.header("Chat with PDF")
+    st.header("💬 Chat with PDF")
 
     if not ss.index:
-        st.warning("Upload or load stored index first.")
+        st.warning("⚠️ Upload or load stored index first.")
     else:
-        q = st.text_input("Ask something from PDF:")
+        # Initialize chat history in session state
+        if "chat_history" not in ss:
+            ss.chat_history = []
 
-        if q:
-            results = search(q, ss.model, ss.index, ss.chunks)
-            context = "\n\n".join([r["chunk"] for r in results])
-            prompt = f"Context:\n{context}\n\nQuestion: {q}"
+        # Question input with button
+        col1, col2 = st.columns([5, 1])
+        with col1:
+            q = st.text_input(
+                "Ask something from PDF:",
+                placeholder="e.g., What are the key concepts in this document?",
+                key="learn_question",
+            )
+        with col2:
+            st.write("")  # Spacing
+            st.write("")  # Spacing
+            ask_button = st.button("🚀 Ask", use_container_width=True, type="primary")
 
-            answer = call_ai(prompt)
+        if ask_button and q:
+            with st.spinner("🔍 Searching and generating answer..."):
+                # Search for relevant chunks
+                results = search(q, ss.model, ss.index, ss.chunks)
+                context = "\n\n".join([r["chunk"] for r in results])
 
-            # streaming effect
-            space = st.empty()
-            stream = ""
-            for tok in answer.split():
-                stream += tok + " "
-                space.markdown(stream)
-                time.sleep(0.015)
+                # Improved prompt for better formatting
+                prompt = f"""Context from the document:
+{context}
 
-            with st.expander("Sources"):
-                for src in results:
-                    st.write(f"Score: {src['score']:.2f}")
-                    st.text(src["chunk"])
+Question: {q}
+
+Please provide a clear, well-formatted answer. If listing multiple points:
+- Use bullet points (one per line)
+- Number steps if showing a process
+- Use clear paragraph breaks
+- Be concise but complete"""
+
+                answer = call_ai(prompt)
+
+                # Store in chat history
+                ss.chat_history.append(
+                    {"question": q, "answer": answer, "sources": results}
+                )
+
+        # Display chat history
+        if ss.chat_history:
+            st.divider()
+
+            for i, chat in enumerate(reversed(ss.chat_history)):
+                # Question card
+                st.markdown(
+                    f"""
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                            padding: 15px 20px; border-radius: 12px; margin: 10px 0;">
+                    <strong style="color: white; font-size: 16px;">❓ {chat['question']}</strong>
+                </div>
+                """,
+                    unsafe_allow_html=True,
+                )
+
+                # Answer card with better formatting
+                st.markdown(
+                    """
+                <div style="background: rgba(34, 197, 94, 0.1); padding: 20px; 
+                            border-radius: 12px; border-left: 4px solid #22c55e; margin: 10px 0;">
+                """,
+                    unsafe_allow_html=True,
+                )
+
+                # Format the answer for better readability
+                formatted_answer = format_answer(chat["answer"])
+                st.markdown(formatted_answer)
+
+                st.markdown("</div>", unsafe_allow_html=True)
+
+                # Sources in expander
+                with st.expander("📚 View Sources", expanded=False):
+                    for idx, src in enumerate(chat["sources"], 1):
+                        st.markdown(f"**Source {idx}** (Relevance: {src['score']:.2%})")
+                        st.text_area(
+                            "",
+                            src["chunk"],
+                            height=100,
+                            disabled=True,
+                            key=f"source_{i}_{idx}",
+                            label_visibility="collapsed",
+                        )
+
+                st.divider()
+
+            # Clear history button
+            if st.button("🗑️ Clear Chat History", use_container_width=True):
+                ss.chat_history = []
+                st.rerun()
 
 
 # -------------------------------------------------------------------
