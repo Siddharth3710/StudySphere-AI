@@ -1,97 +1,80 @@
-#📚 StudySphere-AI
-Your AI-powered learning assistant for PDFs, quizzes, flashcards, and summaries.
+<div align="center">
 
-##✨ Overview
+<h1>
+  <img src="https://img.shields.io/badge/📚-StudySphere_AI-1a4a2e?style=for-the-badge&labelColor=e8f2ec" alt="StudySphere AI"/>
+</h1>
 
-StudySphere-AI is an AI-driven learning platform that transforms PDFs into an interactive study environment using Retrieval-Augmented Generation (RAG) and modern LLMs.
+**An intelligent study companion that transforms static PDFs into an interactive learning environment.**
 
-Ask questions, generate summaries, build flashcards, create quizzes, and interact with your study material like never before.
+[![MIT License](https://img.shields.io/badge/License-MIT-22c55e?style=flat-square)](LICENSE)
+[![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-3b82f6?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![Architecture](https://img.shields.io/badge/Architecture-RAG-f59e0b?style=flat-square)](https://arxiv.org/abs/2005.11401)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](CONTRIBUTING.md)
 
-##🚀 Features
-###🔍 RAG-Based PDF Question Answering
+</div>
 
-Extracts text from PDFs
+---
 
-Cleans and chunks content
+## Overview
 
-Builds embeddings using SentenceTransformers
+StudySphere AI combines **Retrieval-Augmented Generation (RAG)** with modern LLMs to help you engage deeply with study material. Instead of passively reading, you can interrogate your documents, surface key concepts, and test yourself — all from a single interface.
 
-Performs semantic search with FAISS
+Every response is grounded in your actual content, eliminating the hallucinations common to generic AI chatbots.
 
-Produces grounded, context-aware answers
+---
 
-###💬 Interactive Chat Mode
+## Features
 
-Ask questions directly from your notes
+### Semantic Question Answering
+Ask any question about your PDF in plain language. FAISS-powered vector search retrieves the most relevant passages; the LLM synthesises a precise, source-grounded answer.
 
-AI responds using retrieved context
+### Interactive Chat Mode
+A conversational interface with a streaming typewriter effect. Follow-up questions maintain context from previously retrieved passages for a coherent, multi-turn study session.
 
-Smooth typing/streaming effect
+### Exam Generator
+Auto-generates multiple-choice and open-ended questions from any section of your document. Highlight a specific passage to create a focused quiz on that exact content.
 
-###📝 Exam Generator
+### Flashcard Deck
+AI-authored flashcards with smooth click-to-flip animation — ideal for spaced repetition on key concepts extracted directly from your notes.
 
-Auto-generate MCQs with correct answers
+### Summariser
+Generate bullet-point or detailed chapter summaries at adjustable lengths, distilling hours of reading into a concise, structured overview.
 
-Create open-ended Q&A
+### Persistent Vector Index
+The FAISS index and text chunks are saved to disk after initial processing. Re-open any previously indexed document instantly — no re-embedding required.
 
-Highlight → Focused quiz generation
+---
 
-###📇 Flashcards Mode (Click-to-Flip)
+## How It Works
+```
+PDF Extract  →  Clean & Chunk  →  Embed (SentenceTransformers)  →  FAISS Index
+                                                                         ↓
+                                       User Query  →  Semantic Retrieval  →  LLM  →  Response
+```
 
-Automatically creates AI flashcards
+Documents are split into overlapping chunks, each encoded into a dense vector and stored in a local FAISS index. At query time, the top-k semantically similar chunks are retrieved and injected into the LLM prompt — ensuring every response is directly traceable to your source material.
 
-Each card has a front/back flip animation
+---
 
-Perfect for revising concepts quickly
+## Privacy & Security
 
-###🧠 Summarizer
+| Concern | How it's handled |
+|---|---|
+| API keys | Stored in `.env`, excluded from version control via `.gitignore` |
+| Your PDFs | Processed and stored entirely on your local machine |
+| Vector index | FAISS index and chunk files never leave your device |
+| External calls | Only the constructed LLM prompt (context + query) is sent to OpenRouter |
 
-Create bullet summaries
+---
 
-Generate detailed chapter summaries
 
-Adjustable word length
 
-###💾 Persistent Vector Storage
+## Contributing
 
-Saves FAISS index + chunks
+Pull requests, issues, and feature ideas are welcome. Please open an issue first to discuss any significant changes before submitting a PR.
 
-No need to reprocess PDFs on every run
+---
 
-<img width="706" height="377" alt="image" src="https://github.com/user-attachments/assets/ac1f4d7d-2307-48ea-bebf-8c640a349fc9" />
-<img width="691" height="618" alt="image" src="https://github.com/user-attachments/assets/da9255f5-0e74-46b0-8d81-62dfcf2f9d23" />
-<img width="471" height="504" alt="image" src="https://github.com/user-attachments/assets/c27fd979-aa75-49e1-adaf-7a7e21fb095e" />
-<img width="487" height="215" alt="image" src="https://github.com/user-attachments/assets/e5d841c8-5830-44c8-ba2f-40c5f94cfb3c" />
-This prevents hallucinations and ensures responses come from your study material.
+## License
 
-##🔒 Security
-
-.env is ignored → API keys stay private
-
-Your PDFs never leave your system
-
-FAISS index and text chunks are stored locally
-
-Only the LLM prompt is sent to OpenRouter
-
-##🚧 Future Improvements
-
-📦 Export flashcards to Anki
-
-🧪 Multi-document knowledge base
-
-🖥️ Offline GGUF-based local model
-
-📊 Learning progress tracking
-
-🗂️ Chapter-wise organization and tagging
-
-🤝 Contributing
-
-Pull requests, issues, and feature ideas are welcome.
-Let’s grow StudySphere-AI together.
-
-##📜 License
-
-Licensed under the MIT License.
-
+Released under the [MIT License](LICENSE).
